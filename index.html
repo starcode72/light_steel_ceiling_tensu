@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>
+    #app {
+      background-image: url(./images/metal02.jpg);
+      background-size: cover;
+      background-position: center;
+      margin: 0 auto;
+      width: clamp(500px, 600px, 100%);
+    }
+    body {
+      font-family: "Helvetica Neue", "Helvetica", "Arial",
+        "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    }
+    p {
+      font-size: 100px;
+      font-weight: 900;
+      margin: 0;
+    }
+    span {
+      text-align: right;
+      margin: 10px;
+      margin-left: auto;
+      display: block;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <h4>横幅 width: {{ width||"0" }}ｍ</h4>
+      <h4>channel</h4>
+      <input
+        v-model.number="width"
+        type="number"
+        name="width"
+        placeholder="例 5.5"
+        step="0.1"
+      />
+      <h4>縦幅 length: {{ length||"0" }}ｍ</h4>
+      <h4>bar</h4>
+      <input
+        v-model.number="length"
+        type="number"
+        placeholder="例 2.5"
+        step="0.1"
+      />
+      <h2>面積: {{ area }}㎡</h2>
+      <select v-model="lengthSelect" name="lengthSelect" id="">
+        <option value="" disabled>製品の長さを選んでください</option>
+        <option value="2">2m</option>
+        <option value="2.5">2.5m</option>
+        <option value="3">3m</option>
+        <option value="3.5">3.5m</option>
+        <option value="4">4m</option>
+        <option value="4.5">4.5m</option>
+        <option value="5">5m</option>
+      </select>
+      <h2>↑製品の長さを選択してください</h2>
+      <hr />
+      <form>
+        <section><h1>割り付けピッチに1つチェックを入れて選択してください</h1></section>
+        <input
+          type="radio"
+          id="normal"
+          value="normal"
+          name="pitch"
+          v-model="pitch"
+        />
+        <label for="normal">ボード</label>
+        <input
+          type="radio"
+          id="double"
+          value="double"
+          name="pitch"
+          v-model="pitch"
+        />
+        <label for="double">ボード(２枚貼り)</label>
+        <input
+          type="radio"
+          id="spand"
+          value="spand"
+          name="pitch"
+          v-model="pitch"
+        />
+        <label for="spand">スパンド</label>
+        <input
+          type="radio"
+          id="jip3x3"
+          value="jip3x3"
+          name="pitch"
+          v-model="pitch"
+        />
+        <label for="jip3x3">ジプトン(3x3)</label>
+        <input
+          type="radio"
+          id="jip15x3"
+          value="jip15x3"
+          name="pitch"
+          v-model="pitch"
+        />
+        <label for="jip15x3">ジプトン(1.5x3)</label>
+        <div v-if="pitch === 'normal'">
+          <h2>s@303/w1820ピッチ</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー{{ wbar }}本</h4>
+          <h4>Sバー{{ sbar }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>SC: {{ scc }}個</h4>
+          <h4>WC: {{ wcc }}個</h4>
+          <h4>SJ: {{ sj }}個</h4>
+          <h4>WJ: {{ wj }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+          <h4>Wバーm数: {{ wbarMeter }}m</h4>
+          <h4>Sバーm数: {{ sbarMeter }}m</h4>
+        </div>
+        <!-- normal -->
+        <div v-else-if="pitch === 'double'">
+          <h2>s@364/w1820ピッチ</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー: {{ wbar364 }}本</h4>
+          <h4>Sバー: {{ sbar364 }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>SC: {{ scc364 }}個</h4>
+          <h4>WC: {{ wcc }}個</h4>
+          <h4>SJ: {{ sj364 }}個</h4>
+          <h4>WJ: {{ wj }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+          <h4>Wバー: {{ wbar364Meter }}m</h4>
+          <h4>Sバー: {{ sbar364Meter }}m</h4>
+        </div>
+        <!-- double -->
+        <div v-else-if="pitch === 'spand'">
+          <h2>s@303w両側のみ</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー: {{ wbarAll }}本</h4>
+          <h4>Sバー: {{ sbarAll }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>SC: {{ scbarAll }}個</h4>
+          <h4>WC: {{ wcbarAll }}個</h4>
+          <h4>SJ: {{ sjSbarAll }}個</h4>
+          <h4>SJ: {{ wjWbarAll }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+          <h4>Wバーm数{{ wbarAllMeter }}m</h4>
+          <h4>Sバーm数: {{ sbarAllMeter }}m</h4>
+        </div>
+        <!-- spand -->
+        <div v-else-if="pitch === 'jip3x3'">
+          <h2>s@303/w@910ピッチ</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー: {{ wbar3x3 }}本</h4>
+          <h4>Sバー: {{ sbar3x3 }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>WC: {{ wc3x3 }}個</h4>
+          <h4>SC: {{ sc3x3 }}個</h4>
+          <h4>SJ: {{ sj3x3 }}個</h4>
+          <h4>WJ: {{ wj3x3 }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>Wバーm数{{ wbarMeter3x3 }}m</h4>
+          <h4>Sバーm数{{ sbarMeter3x3 }}m</h4>
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+        </div>
+        <div v-else-if="pitch === 'jip3x3'">
+          <h2>ジプトン(3x3)</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー: {{ wbar3x3 }}本</h4>
+          <h4>Sバー: {{ sbar3x3 }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>WC: {{ wc3x3 }}個</h4>
+          <h4>SC: {{ sc3x3 }}個</h4>
+          <h4>SJ: {{ sj3x3 }}個</h4>
+          <h4>WJ: {{ wj3x3 }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>Wバーm数{{ wbarMeter3x3 }}m</h4>
+          <h4>Sバーm数{{ sbarMeter3x3 }}m</h4>
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+        </div>
+        <!-- jip3x3 -->
+        <div v-else-if="pitch === 'jip15x3'">
+          <h2>s@227/w@455ピッチ</h2>
+          <h4>C38チャンネル: {{ channel }}本</h4>
+          <h4>Wバー: {{ wbar15x3 }}本</h4>
+          <h4>Sバー: {{ sbar15x3 }}本</h4>
+          <hr />
+          <h4>ボルト: {{ bolt }}本</h4>
+          <h4>ハンガー: {{ hunger }}本</h4>
+          <h4>ナット: {{ nut }}本</h4>
+          <hr />
+          <h4>WC: {{ wc15x3 }}個</h4>
+          <h4>SC: {{ sc15x3 }}個</h4>
+          <h4>SJ: {{ sj15x3 }}個</h4>
+          <h4>WJ: {{ wj15x3 }}個</h4>
+          <h4>CJ: {{ cj }}個</h4>
+          <hr />
+          <h4>Wバーm数{{ wbarMeter15x3 }}m</h4>
+          <h4>Sバーm数{{ sbarMeter15x3 }}m</h4>
+          <h4>チャンネルｍ数: {{ channelMeter }}m</h4>
+        </div>
+        <!-- jip15x3 -->
+        <div v-else></div>
+      </form>
+      <!-- <h4>CJ: {{ cj }}個</h4>
+    <h4>SJ: {{ sj }}個</h4>
+    <h4>WJ: {{ wj }}個</h4>
+    <hr>
+
+    <h4>SJ(364ピッチ): {{ sj364 }}個</h4>
+    <h4>SJ(スパンド){{ sjSbarAll }}個</h4>
+    <hr>
+
+    <h4>SJ(ジプトン3x3){{ sj3x3 }}個</h4>
+    <h4>WJ(ジプトン3x3){{ wj3x3 }}個</h4>
+    <hr>
+
+    <h4>SJ(ジプトン1.5x3){{ sj15x3 }}個</h4>
+    <h4>WJ(ジプトン1.5x3){{ wj15x3 }}個</h4>
+    <hr>
+
+    <h4>SC: {{ scc }}個</h4>
+    <h4>WC: {{ wcc }}個</h4>
+
+    <h4>SC(364ピッチ): {{ scc364　}}個</h4>
+    <h4>WC: {{ wcc }}個</h4>
+
+    <h2>スパンド</h2>
+    <h4>SC(スパンド): {{ scbarAll }}個</h4>
+    <h4>WC(スパンド): {{ wcbarAll }}個</h4>
+
+    <h2>ジプトン3x3</h2>
+    <h4>WC(ジプトン): {{ wc3x3 }}個</h4>
+    <h4>SC(ジプトン): {{ sc3x3 }}個</h4>
+
+    <h2>ジプトン1.5x3</h2>
+    <h4>WC(ジプトン1.5x3): {{ wc15x3 }}個</h4>
+    <h4>SC(ジプトン1.5x3): {{ sc15x3 }}個</h4> -->
+      <!-- <h4>sc: {{ sc}}</h4>
+    <h4>wc: {{ wc}}</h4>
+    <h4>scSbarAll: {{ scSbarAll}}</h4>
+    <h1>sc3x3: {{ sc3x3}}</h1>
+    <h1>wc3x3: {{ wc3x3}}</h1>
+    <h1>sc15x3: {{ sc15x3}}</h1>
+    <h1>wc15x3: {{ wc15x3}}</h1> -->
+    <h6>※ 数量は状況により異なりますので目安としてお使いいただき適宜調整してください</h6>
+    <h6>※ 数値の入力は半角数字です</h6>
+      <div>
+        <p>てんすー</p>
+        <span>produced by yut</span>
+    </div>
+    <!-- #app -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            width: "",
+            length: "",
+            lengthSelect: "",
+            // openWidth: "",
+            // openLength: "",
+            normal: false,
+            twice: false,
+            spand: false,
+            jip3x3: false,
+            jip15x3: false,
+            pitch: "",
+          };
+        },
+        computed: {
+          area() {
+            return this.width * this.length;
+          },
+          channelMeter() {
+            return Math.ceil(this.width * (this.length / 0.9) + this.width * 2);
+          },
+          channel() {
+            return Math.ceil((this.channelMeter / this.lengthSelect) * 1.1);
+          },
+          wbarMeter() {
+            return Math.ceil(
+              this.length * (this.width / 1.8) + this.length * 2
+            );
+          },
+          wbar() {
+            return Math.ceil((this.wbarMeter / this.lengthSelect) * 1.1);
+          },
+          sbarMeter() {
+            return Math.ceil(this.length * (this.width / 0.3));
+          },
+          sbar() {
+            return Math.ceil(this.sbarMeter / this.lengthSelect - this.wbar);
+          },
+          wbar364Meter() {
+            return Math.ceil(
+              this.length * (this.width / 1.8) + this.length * 2
+            );
+          },
+          wbar364() {
+            return Math.ceil((this.wbarMeter / this.lengthSelect) * 1.1);
+          },
+          sbar364Meter() {
+            return Math.ceil(this.length * (this.width / 0.364));
+          },
+          sbar364() {
+            return Math.ceil(this.sbar364Meter / this.lengthSelect - this.wbar);
+          },
+          sbarAllMeter() {
+            return Math.ceil(
+              this.length * (this.width / 0.3) + this.length * 2
+            );
+          },
+          sbarAll() {
+            return Math.ceil((this.sbarAllMeter / this.lengthSelect) * 1.1);
+          },
+          wbarAllMeter() {
+            return Math.floor(this.length * 2);
+          },
+          wbarAll() {
+            return Math.ceil((this.length / this.lengthSelect) * 2 * 1.1);
+          },
+          wbarMeter3x3() {
+            return Math.ceil(
+              this.length * (this.width / 0.9) + this.length * 2
+            );
+          },
+          wbar3x3() {
+            return Math.ceil((this.wbarMeter3x3 / this.lengthSelect) * 1.1);
+          },
+          sbarMeter3x3() {
+            return Math.ceil(this.length * (this.width / 0.3));
+          },
+          sbar3x3() {
+            return Math.ceil(
+              (this.sbarMeter3x3 / this.lengthSelect) * 1.1 - this.wbar3x3
+            );
+          },
+          wbarMeter15x3() {
+            return Math.ceil(
+              this.length * (this.width / 0.45) + this.length * 2
+            );
+          },
+          wbar15x3() {
+            return Math.ceil((this.wbarMeter15x3 / this.lengthSelect) * 1.1);
+          },
+          sbarMeter15x3() {
+            return Math.ceil(this.length * (this.width / 0.45));
+          },
+          sbar15x3() {
+            return Math.ceil((this.sbarMeter15x3 / this.lengthSelect) * 1.1);
+          },
+          bolt() {
+            return Math.ceil(
+              (this.area / 0.9 + this.width / 0.9 + this.length / 0.9) * 1.1
+            );
+          },
+          hunger() {
+            return this.bolt;
+          },
+          nut() {
+            return this.hunger * 2;
+          },
+          cj() {
+            return this.channel;
+          },
+          sj() {
+            return this.sbar;
+          },
+          wj() {
+            return this.wbar;
+          },
+          sj364() {
+            return this.sbar364;
+          },
+          sjSbarAll() {
+            return this.sbarAll;
+          },
+          wjWbarAll() {
+            return this.wbarAll;
+          },
+          sj3x3() {
+            return this.wbar3x3;
+          },
+          wj3x3() {
+            return this.wbar3x3;
+          },
+          sj15x3() {
+            return this.sbar15x3;
+          },
+          wj15x3() {
+            return this.wbar15x3;
+          },
+          wcc() {
+            return Math.ceil((this.length / 0.9) * (this.width / 1.8));
+          },
+          scc() {
+            return Math.ceil(
+              (this.length / 0.9) * (this.width / 0.3) - this.wcc
+            );
+          },
+          scc364() {
+            return Math.ceil(
+              (this.length / 0.9) * (this.width / 0.364) - this.wcc
+            );
+          },
+          scbarAll() {
+            return Math.ceil((this.length / 0.9) * (this.width / 0.3 + 2));
+          },
+          wcbarAll() {
+            return Math.ceil((this.length / 0.9) * 2);
+          },
+          wc3x3() {
+            return Math.ceil((this.length / 0.9) * (this.width / 0.9));
+          },
+          sc3x3() {
+            return Math.ceil(
+              (this.length / 0.9) * (this.width / 0.3) - this.wc3x3
+            );
+          },
+          wc15x3() {
+            return Math.ceil((this.length / 0.9) * (this.width / 0.27));
+          },
+          sc15x3() {
+            return Math.ceil(
+              (this.length / 0.9) * (this.width / 0.27) - this.wc3x3
+            );
+          },
+          // sc() {
+          //   return this.sbar * 6
+          // },
+          // wc() {
+          //   return this.wbar * 6
+          // },
+          // scSbarAll() {
+          //   return this.scSbarAll = this.sbarAll * 6
+          // },
+          // sc3x3() {
+          //   return this.wc3x3 = this.sbar3x3 * 6
+          // },
+          // wc3x3() {
+          //   return this.wc3x3 = this.wbar3x3 * 6
+          // },
+          // sc15x3() {
+          //   return this.sc15x3 = this.sbar15x3 * 6
+          // },
+          // wc15x3() {
+          //   return this.wc15x3 = this.wbar15x3 * 6
+          // },
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
